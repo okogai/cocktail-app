@@ -1,7 +1,11 @@
 export interface UserFields {
-    username: string;
+    email: string;
     password: string;
     token: string;
     role: string;
-    googleId: string;
+    displayName?: string;
+    googleID?: string;
+    facebookID?: string;
+    avatar?: string;
+    __confirmPassword: string;
 }
