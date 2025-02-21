@@ -10,10 +10,12 @@ export interface User {
 }
 
 export interface Cocktail {
+  _id: string;
   user: User;
   title: string;
   description: string;
   image: string;
+  isPublished: boolean;
   ingredients: [
     { name: string,
       amount: string, }

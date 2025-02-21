@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Avatar, Button,  Menu, MenuItem } from "@mui/material";
+import { Avatar, Button, Divider, Menu, MenuItem } from '@mui/material';
 import { User } from "../../../typed";
 import { useAppDispatch } from "../../../app/hooks.ts";
 import { unsetUser } from "../../../store/slices/userSlice.ts";
 import { logout } from "../../../store/thunks/userThunk.ts";
 import Grid from "@mui/material/Grid2";
+import { NavLink } from 'react-router-dom';
 
 interface Props {
   user: User;
@@ -29,6 +30,19 @@ const UserMenu: React.FC<Props> = ({ user }) => {
 
   return (
     <Grid display="flex" alignItems="center">
+      <Button color="inherit" component={NavLink} to="/add-cocktail">
+        Add cocktail
+      </Button>
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{
+          borderColor: "white",
+          height: "2rem",
+          alignSelf: "center",
+          marginX: 1,
+        }}
+      />
       <Button onClick={handleClick} color="inherit">
         Hello, {user.displayName ? user.displayName : user.email}
       </Button>
