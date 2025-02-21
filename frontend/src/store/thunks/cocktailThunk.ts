@@ -11,6 +11,29 @@ export const fetchCocktails = createAsyncThunk<Cocktail[]>(
   },
 );
 
+export const fetchCocktailById = createAsyncThunk<Cocktail, string>(
+  "cocktails/fetchCocktailById",
+  async (id: string) => {
+    const response = await axiosAPI.get(`/cocktails/${id}`);
+    return response.data;
+  },
+);
+
+export const rateCocktail = createAsyncThunk<void, { cocktailId: string; rate: number }>(
+  "cocktails/rateCocktail",
+  async ({ cocktailId, rate }) => {
+    await axiosAPI.post(`/cocktails/${cocktailId}/rating`, { rate });
+  }
+);
+
+export const fetchCocktailsByUser = createAsyncThunk<Cocktail[], string>(
+  "cocktails/fetchCocktailsByUser",
+  async (id: string) => {
+    const response = await axiosAPI.get(`/cocktails?user=${id}`);
+    return response.data;
+  },
+);
+
 export const createCocktail = createAsyncThunk<void, CocktailMutation>
 ("cocktails/createCocktail", async (cocktailMutation) => {
   const formData = new FormData();

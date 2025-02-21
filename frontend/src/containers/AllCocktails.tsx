@@ -7,7 +7,9 @@ import {
 import { selectUser } from '../store/slices/userSlice.ts';
 import CocktailsList from '../components/CocktailsList/CocktailsList.tsx';
 import { useEffect } from 'react';
-import { deleteCocktail, fetchCocktails, publishCocktail } from '../store/thunks/cocktailThunk.ts';
+import {  fetchCocktails } from '../store/thunks/cocktailThunk.ts';
+import { Link } from 'react-router-dom';
+import { Box, Typography, Button } from '@mui/material';
 
 const AllCocktails = () => {
   const dispatch = useAppDispatch();
@@ -20,17 +22,26 @@ const AllCocktails = () => {
     dispatch(fetchCocktails());
   }, [dispatch]);
 
-  const handlePublish = async (cocktailId: string) => {
-    if (user?.role === "admin") {
-      await dispatch(publishCocktail(cocktailId));
-      await dispatch(fetchCocktails());
-    }
-  };
-
-  const handleDelete = async (cocktailId: string) => {
-    await dispatch(deleteCocktail(cocktailId));
-    await dispatch(fetchCocktails());
-  };
+  if (!user) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        textAlign="center"
+        marginTop={5}
+      >
+        <Typography variant="h5" gutterBottom>
+          You need to log in to see the cocktails.
+        </Typography>
+        <Link to="/login" style={{ textDecoration: 'none' }}>
+          <Button variant="contained" color="primary">
+            Login page
+          </Button>
+        </Link>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -39,8 +50,6 @@ const AllCocktails = () => {
         cocktails={cocktails}
         loading={loading}
         publishLoading={publishLoading}
-        handlePublish={handlePublish}
-        handleDelete={handleDelete}
       />
     </>
   );

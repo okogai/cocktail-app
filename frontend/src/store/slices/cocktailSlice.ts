@@ -1,9 +1,16 @@
 import { Cocktail, GlobalError } from '../../typed';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store.ts';
-import { createCocktail, fetchCocktails, publishCocktail } from '../thunks/cocktailThunk.ts';
+import {
+  createCocktail,
+  fetchCocktailById,
+  fetchCocktails,
+  fetchCocktailsByUser,
+  publishCocktail
+} from '../thunks/cocktailThunk.ts';
 
 interface CocktailsState {
+  cocktail: Cocktail | null;
   cocktails: Cocktail[] | null;
   fetchCocktailsLoading: boolean;
   createLoading: boolean;
@@ -12,6 +19,7 @@ interface CocktailsState {
 }
 
 const initialState: CocktailsState = {
+  cocktail: null,
   cocktails: null,
   fetchCocktailsLoading: false,
   createLoading: false,
@@ -19,6 +27,7 @@ const initialState: CocktailsState = {
   error: null,
 };
 
+export const selectCocktail = (state: RootState) => state.cocktails.cocktail;
 export const selectCocktails = (state: RootState) => state.cocktails.cocktails;
 export const selectCreateCocktailLoading = (state: RootState) => state.cocktails.createLoading;
 export const selectPublishCocktailLoading = (state: RootState) => state.cocktails.publishLoading;
@@ -27,7 +36,7 @@ export const cocktailsSlice = createSlice({
   name: "cocktails",
   initialState,
   reducers: {
-    unsetUser: (state) => {
+    clearCocktails: (state) => {
       state.cocktails = null;
     },
   },
@@ -52,6 +61,26 @@ export const cocktailsSlice = createSlice({
       .addCase(fetchCocktails.rejected, (state) => {
         state.fetchCocktailsLoading = false;
       })
+      .addCase(fetchCocktailsByUser.pending, (state) => {
+        state.fetchCocktailsLoading = true;
+      })
+      .addCase(fetchCocktailsByUser.fulfilled,  (state, action) => {
+        state.cocktails = action.payload;
+        state.fetchCocktailsLoading = false;
+      })
+      .addCase(fetchCocktailsByUser.rejected, (state) => {
+        state.fetchCocktailsLoading = false;
+      })
+      .addCase(fetchCocktailById.pending, (state) => {
+        state.fetchCocktailsLoading = true;
+      })
+      .addCase(fetchCocktailById.fulfilled,  (state, action) => {
+        state.cocktail = action.payload;
+        state.fetchCocktailsLoading = false;
+      })
+      .addCase(fetchCocktailById.rejected, (state) => {
+        state.fetchCocktailsLoading = false;
+      })
       .addCase(publishCocktail.pending, (state) => {
         state.publishLoading = true;
       })
@@ -65,4 +94,4 @@ export const cocktailsSlice = createSlice({
 });
 
 export const cocktailsReducer = cocktailsSlice.reducer;
-
+export const { clearCocktails } = cocktailsSlice.actions;

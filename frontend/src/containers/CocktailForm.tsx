@@ -1,10 +1,12 @@
 import Grid from '@mui/material/Grid2';
-import { useAppDispatch } from '../app/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../app/hooks.ts';
 import { CocktailMutation } from '../typed';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Container, TextField, Typography } from '@mui/material';
 import FileInput from '../components/UI/FileInput/FileInput.tsx';
 import { createCocktail } from '../store/thunks/cocktailThunk.ts';
+import { useNavigate } from 'react-router-dom';
+import { selectCreateCocktailLoading } from '../store/slices/cocktailSlice.ts';
 
 const initialState = {
   title: "",
@@ -14,9 +16,11 @@ const initialState = {
 };
 
 const CocktailForm = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState<CocktailMutation>(initialState);
   const [filename, setFilename] = useState("");
   const [ingredients, setIngredients] = useState<{name: string; amount: number}[]>([]);
+  const loading = useAppSelector(selectCreateCocktailLoading);
   const dispatch = useAppDispatch();
 
   const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,9 +34,10 @@ const CocktailForm = () => {
     }
   };
 
-  const submitFormHandler = (e: FormEvent) => {
+  const submitFormHandler = async (e: FormEvent) => {
     e.preventDefault();
-    dispatch(createCocktail({...form, ingredients: JSON.stringify(ingredients)}));
+    await dispatch(createCocktail({...form, ingredients: JSON.stringify(ingredients)}));
+    navigate('/my-cocktails');
   };
 
   const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -143,8 +148,17 @@ const CocktailForm = () => {
                 onChange={fileInputChangeHandler}
               />
             </Grid>
-            <Button type="submit"  variant="contained" sx={{ mt: 3, mb: 2, alignSelf: 'center' }}>
-              Create
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ mt: 3, mb: 2, alignSelf: 'center' }}
+              disabled={loading}
+            >
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Create"
+              )}
             </Button>
           </Grid>
         </Box>

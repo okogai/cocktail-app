@@ -8,17 +8,30 @@ import Typography from '@mui/material/Typography';
 import { CardMedia, CircularProgress, Container } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Cocktail, User } from '../../typed';
+import { deleteCocktail, fetchCocktails, publishCocktail } from '../../store/thunks/cocktailThunk.ts';
+import { useAppDispatch } from '../../app/hooks.ts';
 
 interface Props {
   user: User | null;
   cocktails: Cocktail[] | null;
   loading: boolean;
   publishLoading: boolean;
-  handlePublish: (id: string) => void;
-  handleDelete: (id: string) => void;
 }
 
-const CocktailsList: React.FC<Props> = ({user, cocktails, loading, publishLoading, handlePublish, handleDelete}) => {
+const CocktailsList: React.FC<Props> = ({user, cocktails, loading, publishLoading}) => {
+  const dispatch = useAppDispatch();
+
+  const handlePublish = async (cocktailId: string) => {
+    if (user?.role === "admin") {
+      await dispatch(publishCocktail(cocktailId));
+      await dispatch(fetchCocktails());
+    }
+  };
+
+  const handleDelete = async (cocktailId: string) => {
+    await dispatch(deleteCocktail(cocktailId));
+    await dispatch(fetchCocktails());
+  };
 
   if (loading) {
     return (
@@ -39,7 +52,7 @@ const CocktailsList: React.FC<Props> = ({user, cocktails, loading, publishLoadin
     <Container sx={{ mt: 4 }}>
       <Grid container spacing={3}>
         {cocktails && cocktails.map((cocktail) => (
-          <Grid size={6} key={cocktail._id}>
+          <Grid size={4} key={cocktail._id}>
             <Card sx={{ position: "relative" }}>
               <CardMedia
                 component="img"

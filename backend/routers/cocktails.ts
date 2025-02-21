@@ -32,6 +32,33 @@ cocktailsRouter.get('/', auth, async (req, res, next) => {
     }
 });
 
+cocktailsRouter.get('/:id', auth, async (req, res, next) => {
+    const reqWithUser = req as RequestWithUser;
+
+    if (!reqWithUser.user) {
+        res.status(401).send({ error: 'Token not provided!' });
+        return;
+    }
+
+    try {
+        const cocktail = await Cocktail.findById(req.params.id).populate('user');
+
+        if (!cocktail) {
+            res.status(404).send({ error: 'Cocktail not found!' });
+            return;
+        }
+
+        if (!cocktail.isPublished && reqWithUser.user.role !== 'admin' && String(cocktail.user._id) !== String(reqWithUser.user._id)) {
+            res.status(403).send({ error: 'Access denied!' });
+            return;
+        }
+
+        res.send(cocktail);
+    } catch (e) {
+        next(e);
+    }
+});
+
 cocktailsRouter.post('/:id/rating', auth, permit('user'), async (req, res, next) => {
     const reqWithUser = req as RequestWithUser;
 

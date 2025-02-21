@@ -4,6 +4,8 @@ import RegisterPage from "./components/RegisterPage/RegisterPage.tsx";
 import LoginForm from "./components/LoginForm/LoginForm.tsx";
 import CocktailForm from './containers/CocktailForm.tsx';
 import AllCocktails from './containers/AllCocktails.tsx';
+import MyCocktails from './containers/MyCocktails.tsx';
+import CocktailDetails from './containers/CocktailDetails.tsx';
 
 
 const App = () => {
@@ -14,6 +16,8 @@ const App = () => {
       </header>
       <Routes>
         <Route path="/" element={<AllCocktails />} />
+        <Route path="/cocktail/:id" element={<CocktailDetails />} />
+        <Route path="/my-cocktails" element={<MyCocktails />} />
         <Route path="/add-cocktail" element={<CocktailForm />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginForm />} />

@@ -5,7 +5,8 @@ import { useAppDispatch } from "../../../app/hooks.ts";
 import { unsetUser } from "../../../store/slices/userSlice.ts";
 import { logout } from "../../../store/thunks/userThunk.ts";
 import Grid from "@mui/material/Grid2";
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { clearCocktails } from '../../../store/slices/cocktailSlice.ts';
 
 interface Props {
   user: User;
@@ -13,6 +14,7 @@ interface Props {
 
 const UserMenu: React.FC<Props> = ({ user }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -26,6 +28,8 @@ const UserMenu: React.FC<Props> = ({ user }) => {
   const handleLogout = () => {
     dispatch(logout());
     dispatch(unsetUser());
+    dispatch(clearCocktails());
+    navigate('login');
   };
 
   return (
