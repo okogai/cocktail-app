@@ -5,55 +5,61 @@ import Cocktail from "../models/Cocktail";
 import {CocktailInterface} from "../types";
 import { Types } from "mongoose";
 import permit from "../middleware/permit";
+import User from "../models/User";
 
 const cocktailsRouter = express.Router();
 
-cocktailsRouter.get('/', auth, async (req, res, next) => {
-    const reqWithUser = req as RequestWithUser;
+cocktailsRouter.get('/', async (req, res, next) => {
+    const token = req.get('Authorization');
 
-    if (!reqWithUser.user) {
-        res.status(401).send({ error: 'Token not provided!' });
+    if (!token) {
+        const cocktails = await Cocktail.find({ isPublished: true }).populate('user');
+        res.send(cocktails);
         return;
     }
 
-    try {
-        let cocktails = [];
+    const user = await User.findOne({token});
 
+    try {
         if(req.query.user) {
-            cocktails = await Cocktail.find({user: req.query.user}).populate('user');
-        } else if (reqWithUser.user.role === 'admin') {
-            cocktails = await Cocktail.find().populate('user');
-        } else {
-            cocktails = await Cocktail.find({ isPublished: true }).populate('user');
+          const cocktails = await Cocktail.find({user: req.query.user}).populate('user');
+            res.send(cocktails);
+            return;
         }
-        res.send(cocktails);
+        if (user && user.role === 'admin') {
+          const cocktails = await Cocktail.find().populate('user');
+          res.send(cocktails);
+          return;
+        } else {
+            const cocktails = await Cocktail.find({ isPublished: true }).populate('user');
+            res.send(cocktails);
+            return;
+        }
     } catch (e) {
         next(e);
     }
 });
 
-cocktailsRouter.get('/:id', auth, async (req, res, next) => {
-    const reqWithUser = req as RequestWithUser;
+cocktailsRouter.get('/:id', async (req, res, next) => {
+    const token = req.get('Authorization');
 
-    if (!reqWithUser.user) {
-        res.status(401).send({ error: 'Token not provided!' });
+    if (!token) {
+        const cocktails = await Cocktail.findById({ _id: req.params.id, isPublished: true }).populate('user');
+        res.send(cocktails);
         return;
     }
 
     try {
-        const cocktail = await Cocktail.findById(req.params.id).populate('user');
+        const user = await User.findOne({token});
 
-        if (!cocktail) {
-            res.status(404).send({ error: 'Cocktail not found!' });
+        if (user && user.role === 'admin') {
+            const cocktails = await Cocktail.findById(req.params.id).populate('user');
+            res.send(cocktails);
             return;
+        } else {
+            const cocktails = await Cocktail.findById({ _id: req.params.id, isPublished: true }).populate('user');
+            res.send(cocktails);
         }
-
-        if (!cocktail.isPublished && reqWithUser.user.role !== 'admin' && String(cocktail.user._id) !== String(reqWithUser.user._id)) {
-            res.status(403).send({ error: 'Access denied!' });
-            return;
-        }
-
-        res.send(cocktail);
     } catch (e) {
         next(e);
     }

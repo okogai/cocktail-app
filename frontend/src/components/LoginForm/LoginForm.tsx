@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import FacebookIcon from '@mui/icons-material/Facebook';
 import Person2Icon from "@mui/icons-material/Person2";
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -97,6 +98,16 @@ const RegisterPage = () => {
                 onSuccess={response => facebookLoginHandler(response.accessToken, response.userID)}
                 onFail={() => {alert("Facebook login failed");
                 }}
+                render={renderProps => (
+                  <Button
+                    onClick={renderProps.onClick}
+                    variant="contained"
+                    color="primary"
+                    startIcon={<FacebookIcon />}
+                  >
+                    <Typography variant="body2">Sign in with Facebook</Typography>
+                  </Button>
+                )}
               />
             </Grid>
             <Grid size={12}>

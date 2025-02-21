@@ -82,17 +82,21 @@ const CocktailDetails = () => {
               ))}
             </ul>
 
-            <Typography variant="h6" mt={2} sx={{ mt: 5, alignSelf: 'center' }}>
-              Rating:
-            </Typography>
-            <Rating
-              name="cocktail-rating"
-              value={userRating ?? 0}
-              onChange={handleRate}
-              size="large"
-              sx={{ alignSelf: 'center' }}
-            />
-          </CardContent>
+            {user && (
+                <>
+                  <Typography variant="h6" mt={2} sx={{ mt: 5, alignSelf: 'center' }}>
+                    Rating:
+                  </Typography>
+                  <Rating
+                    name="cocktail-rating"
+                    value={userRating ?? 0}
+                    onChange={handleRate}
+                    size="large"
+                    sx={{ alignSelf: 'center' }}
+                  />
+                </>
+              )}
+              </CardContent>
         </Card>
       ) : (
         <Typography variant="body1" color="text.secondary">
