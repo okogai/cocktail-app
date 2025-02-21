@@ -31,13 +31,11 @@ export const googleLogin = createAsyncThunk<
 
 export const facebookLogin = createAsyncThunk<
   User,
-  string,
+  {accessToken: string, userID: string},
   { rejectValue: GlobalError }
->("users/facebookLogin", async (credential, { rejectWithValue }) => {
+>("users/facebookLogin", async (data, { rejectWithValue }) => {
   try {
-    const response = await axiosAPI.post<RegisterResponse>("/users/facebook", {
-      credential,
-    });
+    const response = await axiosAPI.post<RegisterResponse>("/users/facebook", data);
     return response.data.user;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 400) {

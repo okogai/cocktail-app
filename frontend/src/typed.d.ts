@@ -9,6 +9,28 @@ export interface User {
   avatar: string;
 }
 
+export interface Cocktail {
+  user: User;
+  title: string;
+  description: string;
+  image: string;
+  ingredients: [
+    { name: string,
+      amount: string, }
+  ]
+  rating?: [
+    { user: string,
+      rate: number}
+  ]
+}
+
+export interface CocktailMutation {
+  title: string;
+  description: string;
+  ingredients: string;
+  image: File | null;
+}
+
 export interface RegisterMutation {
   email: string;
   password: string;

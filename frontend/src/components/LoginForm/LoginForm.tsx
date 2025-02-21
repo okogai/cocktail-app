@@ -19,8 +19,10 @@ import {
   selectLoginError,
   selectLoginLoading,
 } from "../../store/slices/userSlice.ts";
-import { googleLogin, login } from "../../store/thunks/userThunk.ts";
+import { facebookLogin, googleLogin, login } from '../../store/thunks/userThunk.ts';
 import { GoogleLogin } from "@react-oauth/google";
+import FacebookLogin from '@greatsumini/react-facebook-login';
+import { ACCESS_ID } from '../../constants.ts';
 
 const initialState = {
   email: "",
@@ -47,6 +49,11 @@ const RegisterPage = () => {
 
   const googleLoginHandler = async (credential: string) => {
     await dispatch(googleLogin(credential)).unwrap();
+    navigate("/");
+  };
+
+  const facebookLoginHandler = async (accessToken: string, userID: string) => {
+    await dispatch(facebookLogin({accessToken, userID})).unwrap();
     navigate("/");
   };
 
@@ -80,6 +87,14 @@ const RegisterPage = () => {
           sx={{ mt: 3 }}
         >
           <Grid container direction={"column"} size={12} spacing={2}>
+            <Grid size={12}>
+              <FacebookLogin
+                appId={ACCESS_ID}
+                onSuccess={response => facebookLoginHandler(response.accessToken, response.userID)}
+                onFail={() => {alert("Facebook login failed");
+                }}
+              />
+            </Grid>
             <Grid size={12}>
               <GoogleLogin
                 onSuccess={(credentialResponse) => {

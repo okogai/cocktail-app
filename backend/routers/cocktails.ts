@@ -17,13 +17,16 @@ cocktailsRouter.get('/', auth, async (req, res, next) => {
     }
 
     try {
-        if (reqWithUser.user.role === 'admin') {
-            const cocktails = await Cocktail.find();
-            res.send(cocktails);
+        let cocktails = [];
+
+        if(req.query.user) {
+            cocktails = await Cocktail.find({user: req.query.user}).populate('user');
+        } else if (reqWithUser.user.role === 'admin') {
+            cocktails = await Cocktail.find().populate('user');
         } else {
-            const cocktails = await Cocktail.find({ user: reqWithUser.user._id });
-            res.send(cocktails);
+            cocktails = await Cocktail.find({ isPublished: true }).populate('user');
         }
+        res.send(cocktails);
     } catch (e) {
         next(e);
     }
