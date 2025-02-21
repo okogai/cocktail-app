@@ -7,6 +7,7 @@ import FileInput from '../components/UI/FileInput/FileInput.tsx';
 import { createCocktail } from '../store/thunks/cocktailThunk.ts';
 import { useNavigate } from 'react-router-dom';
 import { selectCreateCocktailLoading } from '../store/slices/cocktailSlice.ts';
+import {toast} from "react-toastify";
 
 const initialState = {
   title: "",
@@ -37,6 +38,7 @@ const CocktailForm = () => {
   const submitFormHandler = async (e: FormEvent) => {
     e.preventDefault();
     await dispatch(createCocktail({...form, ingredients: JSON.stringify(ingredients)}));
+    toast.success('Your cocktail is under moderator review.');
     navigate('/my-cocktails');
   };
 

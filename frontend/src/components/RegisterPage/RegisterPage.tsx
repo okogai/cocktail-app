@@ -19,6 +19,7 @@ import {
 } from "../../store/slices/userSlice.ts";
 import { register } from "../../store/thunks/userThunk.ts";
 import FileInput from '../UI/FileInput/FileInput.tsx';
+import { toast } from 'react-toastify';
 
 const RegisterPage = () => {
   const dispatch = useAppDispatch();
@@ -55,6 +56,7 @@ const RegisterPage = () => {
     e.preventDefault();
     try {
       await dispatch(register(form)).unwrap();
+      toast.success('You have successfully registered.');
       navigate("/");
     } catch (e) {
       console.log(e);

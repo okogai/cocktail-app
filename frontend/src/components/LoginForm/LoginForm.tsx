@@ -23,6 +23,7 @@ import { facebookLogin, googleLogin, login } from '../../store/thunks/userThunk.
 import { GoogleLogin } from "@react-oauth/google";
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { ACCESS_ID } from '../../constants.ts';
+import { toast } from 'react-toastify';
 
 const initialState = {
   email: "",
@@ -44,16 +45,19 @@ const RegisterPage = () => {
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     await dispatch(login(form)).unwrap();
+    toast.success('You have successfully logged in');
     navigate("/");
   };
 
   const googleLoginHandler = async (credential: string) => {
     await dispatch(googleLogin(credential)).unwrap();
+    toast.success('You have successfully logged in');
     navigate("/");
   };
 
   const facebookLoginHandler = async (accessToken: string, userID: string) => {
     await dispatch(facebookLogin({accessToken, userID})).unwrap();
+    toast.success('You have successfully logged in');
     navigate("/");
   };
 

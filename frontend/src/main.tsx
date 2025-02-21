@@ -8,6 +8,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import { addInterceptors } from "./utils/axiosAPI.ts";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { GOOGLE_CLIENT_ID } from "./constants.ts";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 addInterceptors(store);
 
@@ -17,6 +19,7 @@ createRoot(document.getElementById("root")!).render(
       <PersistGate persistor={persistor}>
         <CssBaseline />
         <BrowserRouter>
+          <ToastContainer/>
           <App />
         </BrowserRouter>
       </PersistGate>

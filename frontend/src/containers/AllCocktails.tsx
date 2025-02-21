@@ -44,6 +44,22 @@ const AllCocktails = () => {
     );
   }
 
+  if (cocktails === null || cocktails.length === 0) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        textAlign="center"
+        marginTop={5}
+      >
+        <Typography variant="h4" gutterBottom>
+          There are no cocktails to display yet
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <>
       <CocktailsList

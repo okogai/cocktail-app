@@ -34,6 +34,19 @@ const UserMenu: React.FC<Props> = ({ user }) => {
 
   return (
     <Grid display="flex" alignItems="center">
+      <Button color="inherit" component={NavLink} to="/my-cocktails">
+        My cocktails
+      </Button>
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{
+          borderColor: "white",
+          height: "2rem",
+          alignSelf: "center",
+          marginX: 1,
+        }}
+      />
       <Button color="inherit" component={NavLink} to="/add-cocktail">
         Add cocktail
       </Button>
