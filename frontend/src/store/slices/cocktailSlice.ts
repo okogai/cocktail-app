@@ -2,7 +2,7 @@ import { Cocktail, GlobalError } from '../../typed';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store.ts';
 import {
-  createCocktail,
+  createCocktail, deleteCocktail,
   fetchCocktailById,
   fetchCocktails,
   fetchCocktailsByUser,
@@ -15,6 +15,7 @@ interface CocktailsState {
   fetchCocktailsLoading: boolean;
   createLoading: boolean;
   publishLoading: boolean;
+  deleteLoading: boolean;
   error: GlobalError | null;
 }
 
@@ -24,13 +25,16 @@ const initialState: CocktailsState = {
   fetchCocktailsLoading: false,
   createLoading: false,
   publishLoading: false,
+  deleteLoading: false,
   error: null,
 };
 
 export const selectCocktail = (state: RootState) => state.cocktails.cocktail;
 export const selectCocktails = (state: RootState) => state.cocktails.cocktails;
+export const selectfetchCocktailsLoading = (state: RootState) => state.cocktails.fetchCocktailsLoading;
 export const selectCreateCocktailLoading = (state: RootState) => state.cocktails.createLoading;
 export const selectPublishCocktailLoading = (state: RootState) => state.cocktails.publishLoading;
+export const selectDeleteCocktailLoading = (state: RootState) => state.cocktails.deleteLoading;
 
 export const cocktailsSlice = createSlice({
   name: "cocktails",
@@ -89,6 +93,15 @@ export const cocktailsSlice = createSlice({
       })
       .addCase(publishCocktail.rejected, (state) => {
         state.publishLoading = false;
+      })
+      .addCase(deleteCocktail.pending, (state) => {
+        state.deleteLoading = true;
+      })
+      .addCase(deleteCocktail.fulfilled,  (state) => {
+        state.deleteLoading = false;
+      })
+      .addCase(deleteCocktail.rejected, (state) => {
+        state.deleteLoading = false;
       })
   },
 });

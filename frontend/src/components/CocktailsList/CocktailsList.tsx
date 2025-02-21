@@ -16,9 +16,10 @@ interface Props {
   cocktails: Cocktail[] | null;
   loading: boolean;
   publishLoading: boolean;
+  deleteLoading: boolean;
 }
 
-const CocktailsList: React.FC<Props> = ({user, cocktails, loading, publishLoading}) => {
+const CocktailsList: React.FC<Props> = ({user, cocktails, loading, publishLoading, deleteLoading}) => {
   const dispatch = useAppDispatch();
 
   const handlePublish = async (cocktailId: string) => {
@@ -83,7 +84,7 @@ const CocktailsList: React.FC<Props> = ({user, cocktails, loading, publishLoadin
                         onClick={() => handlePublish(cocktail._id)}
                         disabled={publishLoading}
                       >
-                        Publish
+                        {publishLoading ? <CircularProgress size={24} /> : 'Publish'}
                       </Button>
                     )}
                     {user?.role === "admin" && (
@@ -91,9 +92,9 @@ const CocktailsList: React.FC<Props> = ({user, cocktails, loading, publishLoadin
                         variant="contained"
                         color="error"
                         onClick={() => handleDelete(cocktail._id)}
-                        disabled={loading}
+                        disabled={deleteLoading}
                       >
-                        Delete
+                        {deleteLoading ? <CircularProgress size={24} /> : 'Delete'}
                       </Button>
                     )}
                   </Box>
