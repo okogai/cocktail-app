@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/public', express.static(config.publicPath));
 
-app.use('users', usersRouter);
+app.use('/users', usersRouter);
 
 
 const run = async () => {

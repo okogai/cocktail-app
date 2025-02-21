@@ -29,7 +29,7 @@ const UserSchema = new Schema<
 >({
     email: {
         type: String,
-        required: [true, 'Username is required'],
+        required: [true, 'Email is required'],
         unique: true,
         validate: [
             {
@@ -81,6 +81,15 @@ const UserSchema = new Schema<
         },
     }
 );
+
+UserSchema.path("password").validate(function (value) {
+    if (!this.isModified('password')) return;
+
+    if (value !== this.confirmPassword) {
+        this.invalidate('password', 'Passwords do not match');
+        this.invalidate('confirmPassword', 'Passwords do not match');
+    }
+});
 
 UserSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
