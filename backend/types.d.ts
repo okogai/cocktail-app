@@ -9,3 +9,18 @@ export interface UserFields {
     avatar?: string;
     __confirmPassword: string;
 }
+
+export interface CocktailInterface {
+    user: Types.ObjectId;
+    title: string;
+    description: string;
+    image: string | null;
+    ingredients: [
+        { name: string,
+        amount: string, }
+    ]
+    rating?: [
+        { user: Types.ObjectId,
+        rate: number}
+    ]
+}

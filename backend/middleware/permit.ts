@@ -15,7 +15,7 @@ const permit = (...roles: string[]) => {
         }
 
         if (!roles.includes(req.user.role)) {
-            res.status(403).send({'message' : 'Unauthorized'});
+            res.status(403).send({'message' : 'You have no permissions'});
             return;
         }
 

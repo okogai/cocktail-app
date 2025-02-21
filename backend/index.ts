@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import mongoDb from "./mongoDb";
 import config from "./config";
 import usersRouter from "./routers/users";
+import cocktailsRouter from "./routers/cocktails";
 
 
 const app = express();
@@ -14,7 +15,7 @@ app.use(express.json());
 app.use('/public', express.static(config.publicPath));
 
 app.use('/users', usersRouter);
-
+app.use('/cocktails', cocktailsRouter);
 
 const run = async () => {
     mongoose.set('strictQuery', false);
